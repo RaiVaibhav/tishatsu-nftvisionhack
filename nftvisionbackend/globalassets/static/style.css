@@ -1,0 +1,95 @@
+:root {
+    --var-text-color:  rgb(134, 134, 134);
+    --var-text-hover:  rgb(99, 77, 90);
+}
+body {
+    font-family: 'CMU Typewriter Text' !important;
+}
+.drawing-area{
+    position: absolute;
+    top: 60px;
+    left: 122px;
+    z-index: 10;
+    width: 200px;
+    height: 400px;
+}
+
+.canvas-container{
+    width: 250px; 
+    height: 400px; 
+    position: relative; 
+    user-select: none;
+}
+
+.tshirt-div{
+    /* position: relative; */
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-size:contain;
+    background-position:center;
+}
+
+#tshirt-backgroundpicture {
+    height: 100%;
+    width: 100%;
+}
+.canvas{
+    position: absolute;
+    width: 160px;
+    height: 310px; 
+    left: 10px; 
+    top: 80px; 
+    user-select: none; 
+    cursor: default;
+}
+
+.row-con {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.load-wraper{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(211,211,211);
+    z-index: 44;
+    overflow: hidden;
+    border-radius: 5px;
+}
+.activity{
+    position: absolute;
+    left: -45%;
+    height: 100%;
+    width: 45%;
+    background-image: linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+    background-image: -moz-linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+    background-image: -webkit-linear-gradient(to left, rgba(251,251,251, .05), rgba(251,251,251, .3), rgba(251,251,251, .6), rgba(251,251,251, .3), rgba(251,251,251, .05));
+    animation: loading 1s infinite;
+    z-index: 45;
+}
+
+.text-color-brown {
+    color: var(--var-text-color);
+}
+.border-brown {
+    border-color: var(--var-text-color)
+}
+.text-bg-brown {
+    background-color: var(--var-text-hover)
+}
+
+.text-bg-brown:hover {
+    background-color: rgb(149 124 139);
+}
+@keyframes loading {
+    0%{
+        left: -45%;
+    }
+    100%{
+        left: 100%;
+    }
+}

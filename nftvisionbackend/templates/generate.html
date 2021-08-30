@@ -1,0 +1,192 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=2.0">
+  <title>tishatsu random t-shirt generator</title>
+  <link href="https://fonts.cdnfonts.com/css/cmu-typewriter-text" rel="stylesheet" />
+  <meta name="description" content="tishatsu is a new age T-shirts on blockchain." />
+  <meta property="og:title" content="tishatsu random t-shirt generator" />
+  <meta property="og:description" content="tishatsu is a new age T-shirts on blockchain" />
+  <meta property="og:image" content="{% static 'samplet.png' %}" />
+  <link rel="icon" href="{% static 'samplet.png' %}" />
+  <link href="{% static 'style.css' %}" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"
+    integrity="sha512-OqcrADJLG261FZjar4Z6c4CfLqd861A3yPNMb+vRQ2JwzFT49WT4lozrh3bcKxHxtDTgNiqgYbEUStzvZQRfgQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+    integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <div class="container mx-auto my-auto">
+    <div class="p-10 flex flex-col text-center items-center">
+      <div class="flex flex-row flex-wrap items-center text-center justify-center text-xl">
+        <h1 class="heading">Create your own tishatsu t-shirt</h1>
+        &nbsp;
+        <span class="rounded-md shadow-sm">
+          <button id="mint-now" type="button" onclick="generateImageOnClick()"
+            class="text-bg-brown inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white">
+            <div class="w-4"></div>
+            Generate
+            <svg id="loading-svg" class="invisible animate-spin ml-1 h-5 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+
+          </button>
+        </span>
+      </div>
+
+      <div style="max-width: fit-content;" class="p-5 rounded overflow-hidden md:shadow-lg text-center align-center">
+        <br /><br />
+        <div>
+          <div id="tshirt-div" class="tshirt-div">
+            <img id="tshirt-backgroundpicture" src="{% static 'samplet.png' %}" />
+            <div id="custom-design-drawingArea" class="drawing-area" style="z-index: -1;">
+              <div class="canvas-main-container" style="visibility: hidden;">
+                <canvas id="custom-design-canvas" class="canvas" width="452" height="584"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <button id="download-now" type="button" onclick="downloadImage()"
+          class="text-bg-brown inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white transition ease-in-out duration-150">
+          Get Ipfs link
+          <svg id="ipfs-loading-svg" class="invisible animate-spin ml-1 h-5 w-4 text-white"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+        </button>
+        <div class="bg-white pt-5 rounded">
+          <input class="border-brown border-solid border rounded py-2 px-4 cursor-not-allowed" type="text"
+            placeholder="Enter some text" id="copyMe" disabled />
+          &nbsp;
+          <button disabled id="copy-button" class="text-bg-brown mt-5 text-white font-bold py-2 px-4 rounded">
+            Copy
+          </button>
+        </div>
+        <p class="text-green-700"></p>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="{% static 'sketch.js' %}"></script>
+  <script src="{% static 'fabric.min.js' %}"></script>
+  <script src="{% static 'dom-to-img.min.js' %}"></script>
+  <script>
+    var sampletUrl = "{% static 'samplet.png' %}";
+    let tShirtCanvas = new fabric.Canvas("custom-design-canvas");
+    const renderedImg = document.getElementById('tshirt-backgroundpicture')
+    tShirtCanvas.width = 452;
+    tShirtCanvas.height = 584;
+    const mintNowButton = document.getElementById('mint-now');
+    const downloadNow = document.getElementById('download-now');
+    const copyText = document.querySelector("#copyMe")
+    const showText = document.querySelector("p")
+    const copyButton = document.getElementById('copy-button');
+    const svg = document.getElementById('loading-svg')
+    const ipfsSvg = document.getElementById('ipfs-loading-svg')
+    copyButton.classList.add('cursor-not-allowed');
+    copyButton.disabled = true;
+    function addBirdImage(mycanvas) {
+      return new Promise((resolve, reject) => {
+        fabric.Image.fromURL(birdImageSrc, async (oImg) => {
+          oImg.set({
+            top: 110,
+          });
+          oImg.scaleToHeight(tShirtCanvas.width - 100);
+          oImg.scaleToWidth(tShirtCanvas.height - 500);
+          oImg.left = tShirtCanvas.width - (190)
+          await tShirtCanvas.add(oImg);
+          await tShirtCanvas.bringToFront(oImg);
+          await tShirtCanvas.renderAll();
+          resolve();
+        });
+      }).then(() => {
+        return new Promise((resolve, reject) => {
+          fabric.Image.fromURL(sampletUrl, async (oImg) => {
+            oImg.set({
+              top: 0,
+              scaleX: 1,
+              scaleY: 1.07
+            });
+            await tShirtCanvas.add(oImg);
+            await tShirtCanvas.bringToFront(oImg);
+            await tShirtCanvas.renderAll();
+            resolve()
+          });
+        }).then(() => {
+          mintNowButton.disabled = false;
+          mintNowButton.classList.remove('cursor-not-allowed');
+          svg.classList.add('invisible')
+          const finalhref = tShirtCanvas.toDataURL();
+          renderedImg.src = finalhref;
+        })
+      })
+
+    }
+    function generateImage() {
+      mintNowButton.disabled = true
+      mintNowButton.classList.add('cursor-not-allowed');
+      svg.classList.remove('invisible')
+      return axios.get('api/get-random-shirt-background').then(async (res) => {
+        const { bg_url } = res.data;
+        // tShirtCanvas.setBackgroundImage(0, tShirtCanvas.renderAll.bind(tShirtCanvas)); 
+        tShirtCanvas.setBackgroundImage(bg_url, async function () {
+          tShirtCanvas.renderAll.bind(tShirtCanvas);
+          tShirtCanvas.requestRenderAll();
+          await startSketch();
+        });
+      });
+    }
+    generateImage();
+    function generateImageOnClick() {
+      tShirtCanvas.clear();
+      generateImage();
+    }
+    function downloadImage() {
+      ipfsSvg.classList.remove('invisible')
+      tShirtCanvas.discardActiveObject();
+      tShirtCanvas.renderAll();
+      copyButton.classList.remove('cursor-not-allowed');
+      copyButton.disabled = false;
+      var formData = new FormData();
+      var imagefile = document.querySelector('#file');
+      formData.append("image", renderedImg.src);
+      axios.post('/get-ipfs-link', formData, {
+        headers: {
+          "X-CSRFToken": '{{ csrf_token }}'
+        }
+      }).then((data) => {
+        const { cid } = data.data.value;
+        ipfsSvg.classList.add('invisible')
+        copyText.value = `${cid}.ipfs.dweb.link`
+      })
+    };
+    function copyMeOnClipboard() {
+      navigator.clipboard.writeText(copyText.value)
+      showText.innerHTML = `<b>Copied</b>`
+      setTimeout(() => {
+        showText.innerHTML = ""
+      }, 1000)
+    }
+    copyButton.addEventListener('click', copyMeOnClipboard)
+
+  </script>
+</body>
+
+</html>

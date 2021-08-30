@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>T-Design</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
+    <link href="{% static 'style.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>This page is for T-Design</h1>
+
+        <div class="row-con">
+            <div id="tshirt-div" class="tshirt-div">
+                <img id="tshirt-backgroundpicture" src="/media/samplet.png" />
+    
+                <div id="drawingArea" class="drawing-area">
+                    <div class="canvas-container">
+                        <canvas id="canvas" class="canvas" width="200" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div id="custom-tshirt-div" class="tshirt-div">
+                <img id="tshirt-backgroundpicture" src="/media/samplet.png" />
+    
+                <div id="custom-design-drawingArea" class="drawing-area">
+                    <div class="canvas-container">
+                        <canvas id="custom-design-canvas" class="canvas" width="200" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <label for="tshirt-design">T-Shirt Design:</label>
+                <select id="tshirt-design">
+                    <option value="">Select one of our designs ...</option>
+                    <option value="/media/batman.png">Batman</option>
+                </select>
+            </div>
+            <div class="input-field col s12">
+                <label for="tshirt-color">T-Shirt Color:</label>
+                <select id="tshirt-color">
+                    <option value="#fff">White</option>
+                    <option value="#000">Black</option>
+                    <option value="#f00">Red</option>
+                    <option value="#008000">Green</option>
+                    <option value="#ff0">Yellow</option>
+                    <option value="#ffc0cb">Pink</option>
+                </select>
+                <br><br>
+                <label for="tshirt-custompicture">Upload your own design:</label>
+                <input type="file" id="tshirt-custompicture" />
+                <br /><br />
+                <button onClick="downloadImage()">Download Image</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems); 
+  });
+</script>-->
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
+<script src="{% static 'fabric.min.js' %}"></script>
+<script src="{% static 'dom-to-img.min.js' %}"></script>
+<script>
+    let canvas = new fabric.Canvas("canvas");
+
+    // Update the TShirt color according to the selected color by the user
+    document.getElementById("tshirt-color").addEventListener(
+        "change",
+        function () {
+            // document.getElementById("tshirt-div").style.backgroundColor =
+            //     this.value;
+            document.getElementById("tshirt-div").style.backgroundImage = "url('/media/bg10.jpg')";
+        },
+        false
+    );
+
+    // Update the TShirt color according to the selected color by the user
+    document.getElementById("tshirt-design").addEventListener(
+        "change",
+        function () {
+            canvas.clear();
+            context = canvas.getContext("2d");
+            // let textTop = new fabric.Text('First Lesson', {
+            //     fontSize: 20,
+            //     textAlign: 'justify-center',
+            //     top: 50,
+            //     lineHeight: 1,
+            //     originX: 'left',
+            //     fontFamily: 'Times New Roman',
+            //     fontWeight: 'bold',
+            //     statefullCache: true,
+            // });
+            // textTop.left = textTop.width / 2; //Trick to make it at center of canvas (first get the width then make it)
+            // let textBottom = 
+            //     new fabric.Text("Stick'em\nWith the pointy edge.", {
+            //         fontSize: 20,
+            //         textAlign: 'center',
+            //         top: canvas.height - 50,
+            //         lineHeight: 1,
+            //         originX: 'left',
+            //         fontFamily: 'Times New Roman',
+            //         fontWeight: 'bold',
+            //         statefullCache: true, 
+            //     });
+                fabric.Image.fromURL('/media/bird.png', function(oImg) {
+                // scale image down, and flip it, before adding it onto canvas
+                    oImg.set({
+                        top: 100,
+                    });
+                    oImg.scaleToHeight(canvas.width - 50);
+                    oImg.scaleToWidth(canvas.height - 220);
+                    canvas.add(oImg);
+                });
+            canvas.add(textTop, textBottom);
+            // Call the updateTshirtImage method providing as first argument the URL
+            // of the image provided by the select
+            //updateTshirtImage(this.value);
+        },
+        false
+    );
+
+    document.getElementById('tshirt-custompicture').addEventListener("change", function(e) {
+                let canvas = new fabric.Canvas("custom-design-canvas");
+                canvas.clear();
+                var reader = new FileReader();
+                
+                reader.onload = function (event){
+                    var imgObj = new Image();
+                    imgObj.src = event.target.result;
+
+                    // When the picture loads, create the image in Fabric.js
+                    imgObj.onload = function () {
+                        let img = new fabric.Image(imgObj);
+                        img.scaleToHeight(canvas.width - 50);
+                        img.scaleToWidth(canvas.height - 240);
+                        canvas.add(img);
+                        canvas.centerObject(img);
+                        
+                        canvas.renderAll();
+                    };
+                };
+
+                // If the user selected a picture, load it
+                if(e.target.files[0]){
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            }, false);
+
+    function downloadImage() {
+        canvas.discardActiveObject();
+        canvas.renderAll();
+        domtoimage
+            .toPng(document.getElementById("tshirt-div"))
+            .then(function (dataUrl) {
+                var link = document.createElement('a');
+                link.download = 'my-image-name.jpeg';
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch (function (error) {
+            console.error("oops, something went wrong!", error);
+        });
+    }
+
+</script>
+
+</html>

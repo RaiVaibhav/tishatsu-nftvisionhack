@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  :root {
+    --nft-color: linear-gradient(90deg, rgba(189,147,184,1) 22%, rgba(231,218,130,1) 50%, rgba(135,177,188,1) 73%);
+  }
+  .bg-nft-color {
+    background: var(--nft-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .text-nft-color {
+    color: var(--nft-color) !important;
+  }
+  .text-blue {
+    color: #87b1bc;
+  }
+  .bg-color-purple {
+    /* background-color: #bd93b8; */
+    background-color: #634d5a;
+  }
+  .text-purple {
+    /* color: #bd93b8 !important; */
+    color: #634d5a !important;
+  }
+  .flex-2 {
+    flex: 2;
+  }
+  #header {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    @apply bg-white;
+  }
+  .card-max-width {
+    max-width: 25em;
+  }
+  @media(max-width:1520px) {
+    .left-svg {
+        display: none;
+    }
+  }
+  html { scroll-behavior: smooth; }
+  @keyframes slideInFromLeft {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  #nav:not(.hidden) {
+    /* This section calls the slideInFromLeft animation we defined above */
+    animation: 0.6s ease-out 0s 1 slideInFromLeft;
+    @apply p-4
+  }
+  /* small css for the mobile nav close */
+  #nav-mobile-btn.close span:first-child {
+      transform: rotate(45deg);
+      top: 4px;
+      position: relative;
+      background: #a0aec0;
+  }
+
+  #nav-mobile-btn.close span:nth-child(2) {
+      transform: rotate(-45deg);
+      margin-top: 0px;
+      background: #a0aec0;
+  }
+  #nav-mobile-btn.close span:last-child {
+    display: none;
+  }
+
+  #pinContainer {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  #pinContainer .panel {
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    text-align: center;
+  }
+  .panel span {
+    position: relative;
+    display: block;
+    top: 50%;
+    font-size: 80px;
+  }
+  
+  .panel.blue {
+    background-color: #3883d8;
+  }
+  
+  .panel.turqoise {
+    background-color: #38ced7;
+  }
+  
+  .panel.green {
+    background-color: #22d659;
+  }
+  
+  .panel.bordeaux {
+    background-color: #953543;
+  }
+
+
+}
