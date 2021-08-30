@@ -1,4 +1,4 @@
-# tihatsu Generator Landing Page
+# tishatsu Generator Landing Page
 
 This is a landing page for the tishatsu t-shirt generator, proposed for the [NFTVisionHack](https://www.nftvisionhack.com/)
 

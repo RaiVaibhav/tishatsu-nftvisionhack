@@ -1,4 +1,4 @@
-# tihatsu Generator Backend
+# tishatsu Generator Backend
 
 This is a backend of the tishatsu t-shirt generator, it generates the random background t-shirt and send t-shirt to nft.storage to get the ipfs link.
 

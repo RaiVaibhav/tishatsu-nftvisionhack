@@ -1,4 +1,4 @@
-# tihatsu T-shirt Generator
+# tishatsu T-shirt Generator
 
 Tishatsu is a collection of cool new age T-shirts on blockchain, be on the
 lookout for recently minted tishatsu T-Shirts.
@@ -11,7 +11,7 @@ their own wearables in their preferred Metaverse.
 
 ----------------------------------------------------------------------------------------------------------------------------
 
-## tihatsu Generator Landing Page
+## tishatsu Generator Landing Page
 
 This is a landing page for the tishatsu t-shirt generator, proposed for the
 [NFTVisionHack](https://www.nftvisionhack.com/)
@@ -34,7 +34,7 @@ $ yarn dev
 
 ----------------------------------------------------------------------------------------------------------------------------
 
-## tihatsu Generator Backend
+## tishatsu Generator Backend
 
 This is a backend of the tishatsu t-shirt generator, it generates the random background t-shirt and send
 t-shirt to nft.storage to get the ipfs link.
